@@ -3,6 +3,8 @@ import '../core/models/bind.dart';
 import '../core/models/modular_arguments.dart';
 import 'modular_base.dart';
 
+T inject<T extends Object>() => Modular.get<T>();
+
 class Inject<T> {
   final List<Type>? typesInRequest;
   final List<Bind>? overrideBinds;

@@ -12,6 +12,10 @@ import 'navigation/modular_router_delegate.dart';
 
 late Module _initialModule;
 
+extension ModuleHelper on Module {
+  String get name => runtimeType.toString();
+}
+
 class ModularImpl implements ModularInterface {
   final ModularRouterDelegate routerDelegate;
   final Map<String, Module> injectMap;
@@ -175,6 +179,16 @@ class ModularImpl implements ModularInterface {
     return value;
   }
 
+  void addCoreInit(Module module) {
+    injectMap[module.name] = module;
+    module.instance(_getAllSingletons());
+  }
+
+  void removeModule(Module module) {
+    module.cleanInjects();
+    injectMap.remove(module.name);
+  }
+
   @override
   bool dispose<B extends Object>() {
     var isDisposed = false;
@@ -222,5 +236,14 @@ class ModularImpl implements ModularInterface {
       return injectMap[M.toString()]!.isReady();
     }
     throw ModularError('Module not exist in injector system');
+  }
+
+  bool isSingleton<T extends Object>(T bind) {
+    for (var module in injectMap.values) {
+      if (module.getInjectedBind<T>() != null) {
+        return true;
+      }
+    }
+    return false;
   }
 }

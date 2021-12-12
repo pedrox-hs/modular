@@ -31,5 +31,11 @@ abstract class ModularInterface {
     B? defaultValue,
   });
 
+  void addCoreInit(Module module);
+
+  void removeModule(Module module);
+
   bool dispose<B extends Object>();
+
+  bool isSingleton<T extends Object>(T bind);
 }

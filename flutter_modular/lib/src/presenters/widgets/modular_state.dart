@@ -6,7 +6,7 @@ import '../modular_base.dart';
 
 abstract class ModularState<TWidget extends StatefulWidget,
     TBind extends Object> extends State<TWidget> {
-  final TBind _scope = Modular.get<TBind>();
+  late final TBind _scope = inject();
 
   TBind get store => _scope;
   TBind get bloc => _scope;
@@ -16,6 +16,7 @@ abstract class ModularState<TWidget extends StatefulWidget,
   @override
   void dispose() {
     super.dispose();
+    if (Modular.isSingleton(_scope)) return;
     final isDisposed = Modular.dispose<TBind>();
     if (isDisposed) {
       return;
