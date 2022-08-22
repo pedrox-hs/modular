@@ -191,7 +191,7 @@ class ModularRouterDelegate extends RouterDelegate<ModularRoute>
   }
 
   void removeInject(String path) {
-    final trash = <String>[];
+    final trash = <Module>[];
 
     for (var key in injectMap.keys) {
       final module = injectMap[key]!;
@@ -201,14 +201,12 @@ class ModularRouterDelegate extends RouterDelegate<ModularRoute>
         module.paths.remove('$path/'.replaceAll('//', ''));
       }
       if (module.paths.isEmpty) {
-        module.cleanInjects();
-        trash.add(key);
-        Modular.debugPrintModular("-- ${module.runtimeType.toString()} DISPOSED");
+        trash.add(module);
       }
     }
 
-    for (final key in trash) {
-      injectMap.remove(key);
+    for (final module in trash) {
+      Modular.removeModule(module);
     }
   }
 

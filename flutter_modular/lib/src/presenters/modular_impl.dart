@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 import '../core/errors/errors.dart';
 import '../core/interfaces/modular_interface.dart';
@@ -56,7 +57,9 @@ class ModularImpl implements ModularInterface {
   @override
   void debugPrintModular(String text) {
     if (Modular.debugMode) {
-      debugPrint(text);
+      var location = Trace.current(1).frames[0].location;
+      location = '\x1B[1;96m$location\x1B[0m';
+      debugPrint('🤖 $location: ${text.toString()}');
     }
   }
 
@@ -76,7 +79,7 @@ class ModularImpl implements ModularInterface {
       injectMap[name] = module;
       injectMap[name]!.paths.add(path);
       injectMap[name]!.instance(_getAllSingletons());
-      debugPrintModular("-- ${module.runtimeType.toString()} INITIALIZED");
+      debugPrintModular("-- ${module.name} INITIALIZED");
       return;
     } else {
       // The same module with default path, so rebind the module
@@ -187,6 +190,7 @@ class ModularImpl implements ModularInterface {
   void removeModule(Module module) {
     module.cleanInjects();
     injectMap.remove(module.name);
+    debugPrintModular("-- ${module.name} DISPOSED");
   }
 
   @override

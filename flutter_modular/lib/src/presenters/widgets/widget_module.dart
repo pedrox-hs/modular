@@ -5,12 +5,6 @@ import '../../core/interfaces/module.dart';
 import '../../core/models/bind.dart';
 import '../modular_base.dart';
 
-_debugPrintModular(String text) {
-  if (Modular.debugMode) {
-    debugPrint(text);
-  }
-}
-
 abstract class WidgetModule extends StatelessWidget implements Module {
   Widget get view;
 
@@ -113,7 +107,6 @@ class _ModularProviderState extends State<ModularProvider> {
     super.initState();
     Modular.bindModule(widget.module, rebindDuplicates: true);
     //Modular.addCoreInit(widget.module);
-    _debugPrintModular("-- ${widget.module.runtimeType} INITIALIZED");
   }
 
   @override
@@ -123,9 +116,7 @@ class _ModularProviderState extends State<ModularProvider> {
 
   @override
   void dispose() {
-    widget.module.cleanInjects();
-    super.dispose();
     Modular.removeModule(widget.module);
-    _debugPrintModular("-- ${widget.module.runtimeType} DISPOSED");
+    super.dispose();
   }
 }
