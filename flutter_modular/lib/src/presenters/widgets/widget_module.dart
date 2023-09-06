@@ -15,7 +15,7 @@ abstract class WidgetModule extends StatelessWidget implements Module {
 
   @visibleForTesting
   @override
-  List<Bind> getProcessBinds() => [];
+  List<Bind> getProcessBinds() => _fakeModule.getProcessBinds();
 
   @override
   List get instanciatedSingletons => [];
