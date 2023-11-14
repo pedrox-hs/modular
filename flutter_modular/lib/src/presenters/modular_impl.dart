@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 import '../core/errors/errors.dart';
@@ -12,6 +13,8 @@ import 'modular_base.dart';
 import 'navigation/modular_router_delegate.dart';
 
 late Module _initialModule;
+
+final _logger = Logger('Modular');
 
 extension ModuleHelper on Module {
   String get name => runtimeType.toString();
@@ -57,9 +60,7 @@ class ModularImpl implements ModularInterface {
   @override
   void debugPrintModular(String text) {
     if (Modular.debugMode) {
-      var location = Trace.current(1).frames[0].location;
-      location = '\x1B[1;96m$location\x1B[0m';
-      debugPrint('🤖 $location: ${text.toString()}');
+      _logger.fine(text, null, Trace.current(1));
     }
   }
 
