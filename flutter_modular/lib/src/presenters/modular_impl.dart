@@ -16,10 +16,6 @@ late Module _initialModule;
 
 final _logger = Logger('Modular');
 
-extension ModuleHelper on Module {
-  String get name => runtimeType.toString();
-}
-
 class ModularImpl implements ModularInterface {
   final ModularRouterDelegate routerDelegate;
   final Map<String, Module> injectMap;

@@ -178,3 +178,7 @@ ${typesInRequest.join('/n')}
     return inject is T Function(Inject);
   }
 }
+
+extension ModuleHelper on Module {
+  String get name => runtimeType.toString();
+}
