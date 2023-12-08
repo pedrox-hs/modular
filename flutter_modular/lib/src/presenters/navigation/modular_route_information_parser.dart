@@ -9,6 +9,10 @@ import '../modular_base.dart';
 bool _firstParse = false;
 
 class ModularRouteInformationParser extends RouteInformationParser<ModularRoute> {
+  final Map<String, Module> injectMap;
+
+  ModularRouteInformationParser({required this.injectMap});
+
   @override
   Future<ModularRoute> parseRouteInformation(RouteInformation routeInformation) async {
     late final String path;
@@ -78,7 +82,8 @@ class ModularRouteInformationParser extends RouteInformationParser<ModularRoute>
     ModularRoute? router;
     if (routerName == uri.path || routerName == "${uri.path}/") {
       //router = route.module!.routes[0];
-      router = route.module!.routes.firstWhere((element) => element.routerName == '/', orElse: () => route.module!.routes[0]);
+      final routes = route.module!.routes;
+      router = routes.firstWhere((element) => element.routerName == '/', orElse: () => routes[0]);
       if (router.module != null) {
         var _routerName = (routerName + route.routerName).replaceFirst('//', '/');
         router = _searchInModule(route.module!, _routerName, uri, pushStyle);
@@ -217,7 +222,8 @@ class ModularRouteInformationParser extends RouteInformationParser<ModularRoute>
 
       if (route != null) {
         if (route.children.isEmpty) {
-          found = route.currentModule?.routes.last.routerName == '**' ? route.currentModule?.routes.last : null;
+          final lastRoute = route.currentModule?.routes.last;
+          found = lastRoute?.routerName == '**' ? lastRoute : null;
         } else {
           found = route.children.last.routerName == '**' ? route.children.last : null;
           if (route.routerName != '/') {
@@ -235,48 +241,48 @@ class ModularRouteInformationParser extends RouteInformationParser<ModularRoute>
     return found?.routerName == '**' ? found : null;
   }
 
-  Future<ModularRoute> selectRoute(String path, {Module? module, dynamic arguments, String? pushStyle}) async {
+  Future<ModularRoute> selectRoute(String path, {dynamic arguments, String? pushStyle}) async {
     if (path.isEmpty) {
       throw Exception("Router can not be empty");
     }
     var uri = Uri.parse(path);
-    var router = _searchInModule(module ?? Modular.initialModule, "", uri, pushStyle);
 
-    if (router is RedirectRoute) {
-      uri = Uri.parse(router.to);
-      router = _searchInModule(module ?? Modular.initialModule, "", uri, pushStyle);
+    final allModules = <Module>[
+      Modular.initialModule,
+      ...injectMap.values,
+    ];
+
+    ModularRoute? router = allModules.fold<ModularRoute?>(
+      null,
+      (previous, current) {
+        var route = previous ?? _searchInModule(current, "", uri, pushStyle);
+        if (route is RedirectRoute) {
+          uri = Uri.parse(route.to);
+          route = _searchInModule(current, "", uri, pushStyle);
+        }
+        return route ?? _searchWildcard(uri.path, current, pushStyle);
+      },
+    );
+
+    if (router == null) {
+      throw ModularError('Route \'${uri.path}\' not found');
     }
 
-    uri = router?.uri ?? uri;
-
-    if (router != null) {
-      router = router.copyWith(args: router.args.copyWith(uri: router.uri, data: arguments));
-      if (pushStyle != null) {
-        if (router.routerOutlet.isEmpty) {
-          router = router.copyWith(uri: Uri.parse('${uri.path}@$pushStyle'));
-        } else {
-          var miniRoute = router.routerOutlet.last;
-          miniRoute = miniRoute.copyWith(uri: Uri.parse('${miniRoute.path}@$pushStyle'));
-          router = router.copyWith(routerOutlet: [miniRoute]);
-        }
-      }
-      return canActivate(router.path!, router);
-    } else {
-      router = _searchWildcard(uri.path, module ?? Modular.initialModule, pushStyle);
-      if (router != null) {
-        if (pushStyle != null) {
-          if (router.routerOutlet.isEmpty) {
-            router = router.copyWith(uri: Uri.parse('${uri.path}@$pushStyle'));
-          } else {
-            var miniRoute = router.routerOutlet.last;
-            miniRoute = miniRoute.copyWith(uri: Uri.parse('${miniRoute.path}@$pushStyle'));
-            router = router.copyWith(routerOutlet: [miniRoute]);
-          }
-        }
-        return router;
+    router = router.copyWith(
+      args: router.args.copyWith(uri: router.uri, data: arguments),
+    );
+    if (pushStyle != null) {
+      if (router.routerOutlet.isEmpty) {
+        router = router.copyWith(uri: Uri.parse('${uri.path}@$pushStyle'));
+      } else {
+        var miniRoute = router.routerOutlet.last;
+        miniRoute = miniRoute.copyWith(
+          uri: Uri.parse('${miniRoute.path}@$pushStyle'),
+        );
+        router = router.copyWith(routerOutlet: [miniRoute]);
       }
     }
-    throw ModularError('Route \'${uri.path}\' not found');
+    return canActivate(router.path!, router);
   }
 
   Future<ModularRoute> canActivate(String path, ModularRoute router) async {

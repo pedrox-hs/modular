@@ -22,7 +22,7 @@ final _modularFlags = ModularFlags();
 
 final Map<String, Module> _injectMap = {};
 
-late final _routeInformationParser = ModularRouteInformationParser();
+late final _routeInformationParser = ModularRouteInformationParser(injectMap: _injectMap);
 late final _routerDelegate = ModularRouterDelegate(
     parser: _routeInformationParser, injectMap: _injectMap);
 
