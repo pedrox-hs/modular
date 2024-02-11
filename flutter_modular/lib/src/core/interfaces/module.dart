@@ -20,7 +20,6 @@ abstract class Module {
   final List<Bind> _binds = [];
   List<Bind> get binds => const [];
 
-  @visibleForTesting
   List<Bind> getProcessBinds() => _binds;
   List<ModularRoute> get routes => const [];
 
@@ -50,7 +49,6 @@ abstract class Module {
     }
   }
 
-  @visibleForTesting
   void changeBinds(List<Bind> b) {
     _binds.clear();
     _binds.addAll(b);
@@ -175,6 +173,7 @@ ${typesInRequest.join('/n')}
   }
 
   bool _existBind<T>(T instance, T Function(Inject<dynamic>) inject) {
+    // ignore: unnecessary_type_check
     return inject is T Function(Inject);
   }
 }

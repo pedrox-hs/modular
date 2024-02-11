@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../flutter_modular.dart';
-import '../../core/errors/errors.dart';
-import '../../core/interfaces/modular_route.dart';
-import '../../core/interfaces/module.dart';
-import '../modular_base.dart';
 
 bool _firstParse = false;
 
 class ModularRouteInformationParser extends RouteInformationParser<ModularRoute> {
   final Map<String, Module> injectMap;
 
-  ModularRouteInformationParser({required this.injectMap});
+  ModularRouteInformationParser({this.injectMap = const {}});
 
   @override
   Future<ModularRoute> parseRouteInformation(RouteInformation routeInformation) async {
@@ -241,18 +237,19 @@ class ModularRouteInformationParser extends RouteInformationParser<ModularRoute>
     return found?.routerName == '**' ? found : null;
   }
 
-  Future<ModularRoute> selectRoute(String path, {dynamic arguments, String? pushStyle}) async {
+  Future<ModularRoute> selectRoute(String path, {Module? module, dynamic arguments, String? pushStyle}) async {
     if (path.isEmpty) {
       throw Exception("Router can not be empty");
     }
     var uri = Uri.parse(path);
 
     final allModules = <Module>[
+      if (module != null) module,
       Modular.initialModule,
       ...injectMap.values,
     ];
 
-    ModularRoute? router = allModules.fold<ModularRoute?>(
+    var router = allModules.fold<ModularRoute?>(
       null,
       (previous, current) {
         var route = previous ?? _searchInModule(current, "", uri, pushStyle);
