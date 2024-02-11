@@ -60,7 +60,7 @@ class ModularPage<T> extends Page<T> {
       Widget widgetBuilder(BuildContext context) => page;
 
       if (router.routeGenerator != null) {
-        return router.routeGenerator!(widgetBuilder, this) as Route<T>;
+        return router.routeGenerator!(context, widgetBuilder, this) as Route<T>;
       }
       if (Modular.flags.isCupertino) {
         return CupertinoPageRoute<T>(
@@ -80,7 +80,7 @@ class ModularPage<T> extends Page<T> {
       }
 
       if (router.routeGenerator != null) {
-        return router.routeGenerator!(widgetBuilder, this) as Route<T>;
+        return router.routeGenerator!(context, widgetBuilder, this) as Route<T>;
       }
       return NoTransitionMaterialPageRoute<T>(
         settings: this,
