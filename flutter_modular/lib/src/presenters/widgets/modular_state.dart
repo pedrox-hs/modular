@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
 import '../../../flutter_modular.dart';
-import '../modular_base.dart';
 
 abstract class ModularState<TWidget extends StatefulWidget,
     TBind extends Object> extends State<TWidget> {

@@ -1,9 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import '../../../flutter_modular.dart';
-import '../../core/interfaces/module.dart';
-import '../../core/models/bind.dart';
-import '../modular_base.dart';
 
 abstract class WidgetModule extends StatelessWidget implements Module {
   Widget get view;

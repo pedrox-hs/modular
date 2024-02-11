@@ -2,9 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_modular/src/core/errors/errors.dart';
-import 'package:flutter_modular/src/core/models/bind.dart';
-import 'package:flutter_modular/src/core/interfaces/module.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class Module2 extends Module {

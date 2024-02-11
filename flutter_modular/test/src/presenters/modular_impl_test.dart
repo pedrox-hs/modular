@@ -1,9 +1,9 @@
-import 'package:mockito/mockito.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_modular/src/presenters/modular_impl.dart';
 import 'package:flutter_modular/src/presenters/navigation/modular_route_information_parser.dart';
 import 'package:flutter_modular/src/presenters/navigation/modular_router_delegate.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 main() {
   final injectMap = <String, Module>{};

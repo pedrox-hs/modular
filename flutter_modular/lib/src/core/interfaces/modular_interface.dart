@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
+
 import '../../../flutter_modular.dart';
-
-import '../models/bind.dart';
-
-import '../models/modular_arguments.dart';
-import 'modular_navigator_interface.dart';
-import 'module.dart';
 
 abstract class ModularInterface {
   IModularNavigator? navigatorDelegate;

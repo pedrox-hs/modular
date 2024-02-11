@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_modular/src/core/errors/errors.dart';
 import 'package:flutter_modular/src/presenters/navigation/modular_route_information_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
