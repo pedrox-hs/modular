@@ -9,6 +9,11 @@ class ModularRouteInformationParser extends RouteInformationParser<ModularRoute>
 
   ModularRouteInformationParser({this.injectMap = const {}});
 
+  @visibleForTesting
+  static void reset() {
+    _firstParse = false;
+  }
+
   @override
   Future<ModularRoute> parseRouteInformation(RouteInformation routeInformation) async {
     late final String path;
