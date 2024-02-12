@@ -379,6 +379,7 @@ class ModularRouterDelegate extends RouterDelegate<ModularRoute>
   @override
   String get path => (_getRoute(currentConfiguration)?.path ?? '/').split('@').first;
 
+  @override
   ModularArguments? get args => _arguments;
 
   @override

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../models/modular_arguments.dart';
+
 abstract class IModularNavigator implements Listenable {
   String get path;
   String get localPath;
   String get modulePath;
+
+  ModularArguments? get args;
 
   /// Navigate to a new screen.
   ///

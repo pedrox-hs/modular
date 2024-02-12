@@ -42,7 +42,7 @@ class ModularImpl implements ModularInterface {
   }
 
   @override
-  ModularArguments? get args => routerDelegate.args;
+  ModularArguments? get args => navigatorDelegate?.args ?? routerDelegate.args;
 
   ModularImpl({
     required this.flags,
